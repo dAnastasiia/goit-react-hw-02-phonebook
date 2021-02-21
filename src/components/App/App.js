@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+
+import Section from '../Section';
+import Filter from '../Filter';
+import ContactForm from '../ContactForm';
+import ContactList from '../ContactList';
+
 import './App.scss';
 
 class App extends Component {
@@ -10,84 +16,64 @@ class App extends Component {
       { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
-    name: '',
-    number: '',
     filter: '',
   };
 
-  handleChange = e => {
-    const key = e.currentTarget.name;
-    const value = e.currentTarget.value;
+  addContact = (newName, newNumber) => {
+    const findContact = this.state.contacts.find(
+      ({ name, number }) => name === newName || number === newNumber,
+    );
 
-    this.setState({ [key]: value });
-  };
+    if (findContact) {
+      alert(`${newName} is already in contacts`);
+      return;
+    }
 
-  handleSubmit = e => {
-    e.preventDefault();
+    const id = uuidv4();
 
     this.setState(({ contacts }) => ({
-      contacts: [`${this.state.name}: ${this.state.number}`, ...contacts],
+      contacts: [{ id: id, name: newName, number: newNumber }, ...contacts],
     }));
-
-    this.reset();
   };
 
-  reset = () => {
-    this.setState({ name: '', number: '' });
+  deleteContact = id => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== id),
+    }));
+  };
+
+  changeFilter = e => {
+    const value = e.currentTarget.value;
+    this.setState({ filter: value });
   };
 
   render() {
-    const { name, number, contacts, filter } = this.state;
-    const nameInputId = uuidv4();
-    const numberInputId = uuidv4();
+    const { contacts, filter } = this.state;
+    const findContactsInputId = uuidv4();
+
+    const normalizedFilter = filter.toLowerCase();
+    const filteredContacts = contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter),
+    );
 
     return (
-      <>
+      <Section>
         <h1>Phonebook</h1>
-
-        <form className="ContactForm" onSubmit={this.handleSubmit}>
-          <label htmlFor={nameInputId} className="ContactForm__label">
-            Name
-          </label>
-          <input
-            type="text"
-            name="name"
-            value={name}
-            onChange={this.handleChange}
-            className="ContactForm__input"
-            placeholder="Enter name"
-            autoComplete="off"
-            id={nameInputId}
-          ></input>
-
-          <label htmlFor={numberInputId} className="ContactForm__label">
-            Number
-          </label>
-          <input
-            type="text"
-            name="number"
-            value={number}
-            onChange={this.handleChange}
-            className="ContactForm__input"
-            placeholder="Enter number"
-            autoComplete="off"
-            id={numberInputId}
-          ></input>
-
-          <button className="ContactForm__button" type="submit">
-            Add contact
-          </button>
-        </form>
+        <ContactForm onSubmit={this.addContact} />
 
         <h2>Contacts</h2>
-        <ul className="ContactList">
-          {contacts.map(el => (
-            <li className="ContactList__item" key={uuidv4()}>
-              {el}
-            </li>
-          ))}
-        </ul>
-      </>
+
+        <Filter
+          value={filter}
+          onChange={this.changeFilter}
+          id={findContactsInputId}
+        />
+
+        <ContactList
+          contacts={filteredContacts}
+          onDelete={this.deleteContact}
+        />
+      </Section>
     );
   }
 }
