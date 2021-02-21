@@ -1,0 +1,40 @@
+.ContactForm {
+  display: flex;
+  flex-direction: column;
+
+  margin: 0;
+  padding: 20px 10px;
+
+  width: auto;
+  border: 1px solid black;
+
+  &__label {
+    margin: 0;
+    margin-bottom: 10px;
+
+    font-weight: 700;
+  }
+
+  &__input {
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    width: 300px;
+  }
+
+  &__button {
+    padding: 10px 20px;
+    width: 150px;
+    cursor: pointer;
+
+    border: none;
+    outline: none;
+
+    border-radius: 5px;
+    background-color: antiquewhite;
+
+    &:hover {
+      color: #ffffff;
+      background-color: #53b33b;
+    }
+  }
+}
