@@ -1,0 +1,32 @@
+.ContactList {
+  width: auto;
+
+  margin: 0;
+  padding: 0 0 0 40px;
+
+  &__item:not(:first-child) {
+    margin-top: 10px;
+  }
+
+  &__text {
+    width: 300px;
+    margin: 0;
+    display: inline-block;
+    margin-right: 30px;
+  }
+
+  &__button {
+    padding: 5px 10px;
+    border: none;
+    outline: none;
+
+    background-color: antiquewhite;
+
+    border-radius: 5px;
+
+    &:hover {
+      color: white;
+      background-color: #bb281e;
+    }
+  }
+}
